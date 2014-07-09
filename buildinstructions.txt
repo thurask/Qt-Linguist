@@ -14,4 +14,6 @@ configure -debug-and-release -opensource -platform win32-msvc2013 -static -nomak
 
 jom -j 50
 
+jom clean
+
 And now you'll have Qt5 static for MSVC2013!
