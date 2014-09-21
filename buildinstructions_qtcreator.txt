@@ -1,0 +1,13 @@
+REQUIRED:
+-MSVC2013
+-Git
+
+$git clone https://git.gitorious.org/qt-creator/qt-creator.git qt-creator
+
+$mkdir qt-creator-build
+
+$cd qt-creator-build
+
+$qmake -r ../qt-creator/qtcreator.pro
+
+$nmake
