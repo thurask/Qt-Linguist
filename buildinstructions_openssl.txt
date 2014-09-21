@@ -18,6 +18,7 @@ $perl Configure VC-WIN64A no-asm --prefix=C:\OpenSSL
 $ms\do_win64a
 $nmake -f ms\nt.mak
 $nmake -f ms\nt.mak install
+$nmake -f ms\nt.mak clean
 
 NOTE: The outputs of the 64-bit build are still named libeay32.lib and ssleay32.lib. You’ll have to rename them more sensibly yourself.
 
