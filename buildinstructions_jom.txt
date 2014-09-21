@@ -1,0 +1,10 @@
+REQUIRED:
+-MSVC2013
+-Qt static
+-Git
+
+$git clone git://gitorious.org/qt-labs/jom.git
+$qmake -r
+$nmake
+
+Add resulting compiled bin directory to path.
