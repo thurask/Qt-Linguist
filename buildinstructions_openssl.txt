@@ -11,6 +11,7 @@ $perl Configure VC-WIN32 no-asm --prefix=C:\OpenSSL
 $ms\do_ms
 $nmake -f ms\nt.mak
 $nmake -f ms\nt.mak install
+$nmake -f ms\nt.mak clean
 
 OR
 
