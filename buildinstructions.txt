@@ -8,3 +8,29 @@ REQUIRED:
 -MSVC2013
 -Windows 8.1 SDK
 -jom (not really)
+
+With everything in the path, open MSVC2013 prompt (vcvarsall.bat, make a shortcut to point to MSVC2013 instead of 2012):
+
+$git clone git://gitorious.org/qt/qt5.git qt5
+
+$perl ./init-repository --no-webkit
+
+Edit qmakespec (win32-msvc2013)
+
+QMAKE_CFLAGS_RELEASE    = -O2 -MT
+QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -O2 -MT -Zi
+QMAKE_CFLAGS_DEBUG      = -Zi -MTd
+
+Set env vars in prompt
+
+$set QMAKESPEC=win32-msvc2013
+$set QTDIR=C:\Qt\Qt5.2\qtbase
+$set PATH=C:\Qt\Qt5.2\qtbase\bin;%PATH%
+
+$configure -debug-and-release -opensource -platform win32-msvc2013 -static -nomake examples -nomake tests
+
+$jom -j 50
+or
+$nmake
+
+And now you'll have Qt5 static for MSVC2013!
