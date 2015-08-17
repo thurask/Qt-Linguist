@@ -5,17 +5,22 @@ REQUIRED:
 -Python (latest)
 -Perl (preferably ActiveState Perl)
 -Git
--MSVC2013
+-MSVC2015
 -Windows 8.1 SDK
 -jom (not really)
 
-With everything in the path, open MSVC2013 prompt (vcvarsall.bat, make a shortcut to point to MSVC2013 instead of 2012):
+With everything in the path, open MSVC2015 prompt (VS2015 Command Prompt of choice; I'm using VS2015 x64 x86 Cross Tools):
 
-$git clone git://gitorious.org/qt/qt5.git qt5
+$mkdir C:\Qt5
+$cd C:\Qt5
+
+$git clone git://code.qt.io/qt/qt5.git
+$cd qt5
+$git checkout <branch> (ex. 5.5, 5.4, whatever)
 
 $perl ./init-repository --no-webkit
 
-Edit qmakespec (win32-msvc2013)
+Edit qmakespec (win32-msvc2015, or qtbase\mkspecs\common\msvc-desktop.conf)
 
 QMAKE_CFLAGS_RELEASE    = -O2 -MT
 QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -O2 -MT -Zi
@@ -23,11 +28,11 @@ QMAKE_CFLAGS_DEBUG      = -Zi -MTd
 
 Set env vars in prompt
 
-$set QMAKESPEC=win32-msvc2013
-$set QTDIR=C:\Qt\Qt5.2\qtbase
-$set PATH=C:\Qt\Qt5.2\qtbase\bin;%PATH%
+$set QMAKESPEC=win32-msvc2015
+$set QTDIR=C:\Qt5\qt5
+$set PATH=C:\Qt5\qt5\qtbase\bin;%PATH%
 
-$configure -debug-and-release -opensource -platform win32-msvc2013 -static -nomake examples -nomake tests
+$configure -debug-and-release -opensource -platform win32-msvc2015 -static -nomake examples -nomake tests
 
 $nmake
 
