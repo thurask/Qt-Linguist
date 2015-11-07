@@ -28,4 +28,4 @@ NOTE: The outputs of the 64-bit build are still named libeay32.lib and ssleay32.
 
 
 Alternatively, fuck that shit:
-http://developer.covenanteyes.com/building-openssl-for-visual-studio/
+http://www.npcglib.org/~stathis/blog/precompiled-openssl/
