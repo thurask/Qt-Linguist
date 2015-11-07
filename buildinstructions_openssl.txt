@@ -1,7 +1,8 @@
 REQUIRED:
 -Git
--MSVC2013
+-MSVC2015
 -Perl (preferably ActiveState Perl)
+-nasm
 
 NOTE: This assumes you only want X86 libs built. If you want both, make two OpenSSL directories, one for X86 and one for AMD64, and run this twice.
 
@@ -9,6 +10,7 @@ $git clone git://git.openssl.org/openssl.git C:\OpenSSL
 
 $perl Configure VC-WIN32 no-asm --prefix=C:\OpenSSL
 $ms\do_ms
+$ms\do_nasm
 $nmake -f ms\nt.mak
 $nmake -f ms\nt.mak install
 $nmake -f ms\nt.mak clean
@@ -17,6 +19,7 @@ OR
 
 $perl Configure VC-WIN64A no-asm --prefix=C:\OpenSSL
 $ms\do_win64a
+$ms\do_nasm
 $nmake -f ms\nt.mak
 $nmake -f ms\nt.mak install
 $nmake -f ms\nt.mak clean
