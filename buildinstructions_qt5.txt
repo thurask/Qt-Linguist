@@ -36,7 +36,7 @@ $configure -debug-and-release -opensource -platform win32-msvc2015 -static -noma
 
 $nmake
 
-And now you'll have Qt5 static for MSVC2013!
+And now you'll have Qt5 static for MSVC2015!
 
 Want to reconfigure?
 
