@@ -1,9 +1,9 @@
 REQUIRED:
--MSVC2013
+-MSVC2015
 -Qt static
 -Git
 
-$git clone git://gitorious.org/qt-labs/jom.git
+$git clone git://code.qt.io/qt-labs/jom.git
 $qmake -r
 $nmake
 
