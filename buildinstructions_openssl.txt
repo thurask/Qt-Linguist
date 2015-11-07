@@ -26,3 +26,6 @@ $nmake -f ms\nt.mak clean
 
 NOTE: The outputs of the 64-bit build are still named libeay32.lib and ssleay32.lib. You’ll have to rename them more sensibly yourself.
 
+
+Alternatively, fuck that shit:
+http://developer.covenanteyes.com/building-openssl-for-visual-studio/
