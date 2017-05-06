@@ -1,13 +1,10 @@
 REQUIRED:
--MSVC2013
+-MSVC2017
+-Qt static
 -Git
 
-$git clone https://git.gitorious.org/qt-creator/qt-creator.git qt-creator
-
+$git clone git://code.qt.io/qt-creator/qt-creator.git
 $mkdir qt-creator-build
-
 $cd qt-creator-build
-
 $qmake -r ../qt-creator/qtcreator.pro
-
 $nmake

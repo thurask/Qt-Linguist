@@ -3,41 +3,35 @@ https://stackoverflow.com/questions/15826893/building-qt5-with-visual-studio-201
 
 REQUIRED:
 -Python (latest)
--Perl (preferably ActiveState Perl)
+-Perl
 -Git
--MSVC2015
--Windows 8.1 SDK
+-MSVC2017
+-Windows 10 SDK
 -jom (not really)
 
-With everything in the path, open MSVC2015 prompt (VS2015 Command Prompt of choice; I'm using VS2015 x64 x86 Cross Tools):
-
+With everything in the path, open MSVC2017 prompt (VS2017 Command Prompt of choice; I'm using x64_x86 Cross Tools Command Prompt for VS 2017):
 $mkdir C:\Qt5
 $cd C:\Qt5
-
 $git clone git://code.qt.io/qt/qt5.git
 $cd qt5
-$git checkout <branch> (ex. 5.5, 5.4, whatever)
+$git checkout <branch> (ex. 5.9, 5.8, whatever)
+$perl ./init-repository
 
-$perl ./init-repository --no-webkit
-
-Edit qmakespec (win32-msvc2015, or qtbase\mkspecs\common\msvc-desktop.conf)
-
+Edit qmakespec (qtbase\mkspecs\common\msvc-desktop.conf)
 QMAKE_CFLAGS_RELEASE    = -O2 -MT
 QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -O2 -MT -Zi
 QMAKE_CFLAGS_DEBUG      = -Zi -MTd
 
 Set env vars in prompt
-
-$set QMAKESPEC=win32-msvc2015
+$set QMAKESPEC=win32-msvc
 $set QTDIR=C:\Qt5\qt5
 $set PATH=C:\Qt5\qt5\qtbase\bin;%PATH%
 
-$configure -debug-and-release -opensource -platform win32-msvc2015 -static -nomake examples -nomake tests
-
+Build it
+$configure -debug-and-release -opensource -platform win32-msvc -static -nomake examples -nomake tests
 $nmake
 
-And now you'll have Qt5 static for MSVC2015!
+And now you'll have Qt5 static for MSVC2017!
 
 Want to reconfigure?
-
 $nmake distclean

@@ -1,10 +1,10 @@
 REQUIRED:
--MSVC2015
+-MSVC2017
 -Qt static
 -Git
 
 $git clone git://code.qt.io/qt-labs/jom.git
+$cd jom
 $qmake -r
 $nmake
 
-Add resulting compiled bin directory to path.

@@ -1,13 +1,13 @@
 REQUIRED:
 -Git
--MSVC2015
--Perl (preferably ActiveState Perl)
+-MSVC2017
+-Perl
 -nasm
 
 NOTE: This assumes you only want X86 libs built. If you want both, make two OpenSSL directories, one for X86 and one for AMD64, and run this twice.
-
 $git clone git://git.openssl.org/openssl.git C:\OpenSSL
 
+Pre-1.1.0:
 $perl Configure VC-WIN32 no-asm --prefix=C:\OpenSSL
 $ms\do_ms
 $ms\do_nasm
@@ -24,8 +24,22 @@ $nmake -f ms\nt.mak
 $nmake -f ms\nt.mak install
 $nmake -f ms\nt.mak clean
 
-NOTE: The outputs of the 64-bit build are still named libeay32.lib and ssleay32.lib. You’ll have to rename them more sensibly yourself.
+NOTE: The outputs of the 64-bit build are still named libeay32.lib and ssleay32.lib. You'll have to rename them yourself.
 
+1.1.0+:
+$perl Configure VC-WIN32 no-asm --prefix=C:\OpenSSL
+$nmake
+$nmake test
+$nmake install
+$nmake clean
+
+OR
+
+$perl Configure VC-WIN64A no-asm --prefix=C:\OpenSSL
+$nmake
+$nmake test
+$nmake install
+$nmake clean
 
 Alternatively, fuck that shit:
 http://www.npcglib.org/~stathis/blog/precompiled-openssl/
