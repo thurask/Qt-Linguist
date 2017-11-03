@@ -1,6 +1,9 @@
 https://stackoverflow.com/questions/14932315/how-to-compile-qt-5-under-windows-or-linux-32-or-64-bit-static-or-dynamic-on-v
 https://stackoverflow.com/questions/15826893/building-qt5-with-visual-studio-2012-visual-studio-2013-and-integrating-with/15893226#15893226
 
+If something breaks, read this instead:
+https://github.com/qbittorrent/qBittorrent/wiki/Compiling-with-MSVC-2017-x64-(static-linkage)
+
 REQUIRED:
 -Python (latest)
 -Perl
@@ -28,7 +31,7 @@ $set QTDIR=C:\Qt5\qt5
 $set PATH=C:\Qt5\qt5\qtbase\bin;%PATH%
 
 Build it
-$configure -debug-and-release -opensource -platform win32-msvc -static -nomake examples -nomake tests
+$configure -release -opensource -platform win32-msvc -static -nomake examples -nomake tests
 $nmake
 
 And now you'll have Qt5 static for MSVC2017!
