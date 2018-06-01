@@ -41,5 +41,5 @@ $nmake test
 $nmake install
 $nmake clean
 
-Alternatively, fuck that shit:
-http://www.npcglib.org/~stathis/blog/precompiled-openssl/
+Alternatively:
+https://www.npcglib.org/~stathis/blog/precompiled-openssl/
