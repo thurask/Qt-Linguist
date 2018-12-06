@@ -15,7 +15,7 @@ REQUIRED:
 With everything in the path, open MSVC2017 prompt (VS2017 Command Prompt of choice; I'm using x64_x86 Cross Tools Command Prompt for VS 2017):
 $mkdir C:\Qt5
 $cd C:\Qt5
-$git clone git://code.qt.io/qt/qt5.git
+$git clone https://code.qt.io/qt/qt5.git
 $cd qt5
 $git checkout <branch> (ex. v5.11.0, v5.10.1, whatever)
 $perl ./init-repository
