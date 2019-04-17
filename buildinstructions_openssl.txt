@@ -1,6 +1,6 @@
 REQUIRED:
 -Git
--MSVC2017
+-MSVC2019
 -Perl
 -nasm
 
