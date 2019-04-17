@@ -1,5 +1,5 @@
 REQUIRED:
--MSVC2017
+-MSVC2019
 -Qt static
 -Git
 
