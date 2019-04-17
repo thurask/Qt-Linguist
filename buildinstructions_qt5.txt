@@ -8,7 +8,7 @@ REQUIRED:
 -Python (latest)
 -Perl
 -Git
--MSVC2017 (15.7.3 or newer: https://developercommunity.visualstudio.com/content/problem/76198/vs-2017-compiler-creates-broken-debug-build-using.html)
+-MSVC2019
 -Windows 10 SDK
 -jom
 
