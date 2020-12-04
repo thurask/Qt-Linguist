@@ -2,7 +2,7 @@ https://stackoverflow.com/questions/14932315/how-to-compile-qt-5-under-windows-o
 https://stackoverflow.com/questions/15826893/building-qt5-with-visual-studio-2012-visual-studio-2013-and-integrating-with/15893226#15893226
 
 If something breaks, read this instead:
-https://github.com/qbittorrent/qBittorrent/wiki/Compiling-with-MSVC-2017-x64-(static-linkage)
+https://github.com/qbittorrent/qBittorrent/wiki/Compiling-with-MSVC-2019-(static-linkage)
 
 REQUIRED:
 -Python (latest)
@@ -17,7 +17,7 @@ $mkdir C:\Qt5
 $cd C:\Qt5
 $git clone https://code.qt.io/qt/qt5.git
 $cd qt5
-$git checkout <branch> (ex. 5.12.3, whatever)
+$git checkout <branch> (ex. 5.15.2, whatever)
 $perl ./init-repository
 
 Edit qmakespec (qtbase\mkspecs\common\msvc-desktop.conf)
