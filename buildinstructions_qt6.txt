@@ -29,11 +29,11 @@ $cd ..\qt6-build
 Build it:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -prefix C:\git\qt6-build
 
-If you want to build just tools (i.e. Linguist), make sure to -skip any top level folder other than qttools, qtbase, and dependencies:
+If you want to build just tools (i.e. Linguist), make sure to -skip any top level folder other than qttools, qtbase, and their dependencies:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -prefix C:\git\qt6-build -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtdocgallery -skip qtfeedback -skip qtgamepad -skip qtgraphicaleffects -skip qtimageformats -skip qtlocation -skip qtlotie -skip qtmacextras -skip qtmultimedia -skip qtnetworkauth -skip qtpim -skip qtpurchasing -skip qtqa -skip qtquick3d -skip qtquickcontrols -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtrepotools -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtshadertools -skip qtspeech -skip qtsystems -skip qttranslations -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin -skip qtwebsockets -skip qtwebview -skip qtwinextras -skip qtx11extras -skip qtxmlpatterns
 
 In any case, after configuration:
-$cmake --build .
+$cmake --build . --parallel
 
 If you wish to install:
 $cmake --install .
