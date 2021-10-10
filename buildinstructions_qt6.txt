@@ -1,10 +1,3 @@
-#WIP
-https://stackoverflow.com/questions/14932315/how-to-compile-qt-5-under-windows-or-linux-32-or-64-bit-static-or-dynamic-on-v
-https://stackoverflow.com/questions/15826893/building-qt5-with-visual-studio-2012-visual-studio-2013-and-integrating-with/15893226#15893226
-https://stackoverflow.com/questions/51278611/how-to-make-qt-static-build-run-without-install-vc-redist-x64-exe
-https://github.com/qbittorrent/qBittorrent/wiki/Compiling-with-MSVC-2019-(static-linkage)
-
-If something breaks, read this instead:
 https://wiki.qt.io/Building_Qt_6_from_Git
 
 REQUIRED:
@@ -12,27 +5,27 @@ REQUIRED:
 -Perl (latest)
 -Git (latest)
 -MSVC2019
--Windows 10 SDK (latest)
+-Windows 10/11 SDK (latest)
 -CMake (choco install cmake)
 -Ninja (choco install ninja)
 
 With everything in the path, open MSVC2019 prompt (x64 Native Tools Command Prompt for VS 2019):
-$mkdir C:\Qt5
-$cd C:\Qt5
+$mkdir C:\qt5
+$cd C:\qt5
 $mkdir qt6-build
 $git clone https://code.qt.io/qt/qt5.git
 $cd qt5
-$git checkout <branch> (ex. 6.0.0, whatever)
+$git checkout <branch> (ex. 6.2.0, whatever)
+
+If you want to build all of Qt:
 $perl init-repository
+
+And if you want just tools (i.e. Linguist), init only tools and dependencies:
+$perl init-repository --module-subset=qtbase,qttools,qtdeclarative,qtactiveqt,qtimageformats,qtshadertools,qtsvg
+
+In any case, build it:
 $cd ..\qt6-build
-
-Build it:
-$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -prefix C:\git\qt6-build
-
-If you want to build just tools (i.e. Linguist), make sure to -skip any top level folder other than qttools, qtbase, and their dependencies:
-$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -prefix C:\git\qt6-build -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtdocgallery -skip qtfeedback -skip qtgamepad -skip qtgraphicaleffects -skip qtimageformats -skip qtlocation -skip qtlotie -skip qtmacextras -skip qtmultimedia -skip qtnetworkauth -skip qtpim -skip qtpurchasing -skip qtqa -skip qtquick3d -skip qtquickcontrols -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtrepotools -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtshadertools -skip qtspeech -skip qtsystems -skip qttranslations -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebglplugin -skip qtwebsockets -skip qtwebview -skip qtwinextras -skip qtx11extras -skip qtxmlpatterns
-
-In any case, after configuration:
+$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -nomake manual-tests -nomake minimal-static-tests -nomake benchmarks -prefix C:\qt6-static\
 $cmake --build . --parallel
 
 If you wish to install:
