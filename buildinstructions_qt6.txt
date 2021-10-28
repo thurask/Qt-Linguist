@@ -4,12 +4,12 @@ REQUIRED:
 -Python (latest)
 -Perl (latest)
 -Git (latest)
--MSVC2019
+-MSVC2022
 -Windows 10/11 SDK (latest)
 -CMake (choco install cmake)
 -Ninja (choco install ninja)
 
-With everything in the path, open MSVC2019 prompt (x64 Native Tools Command Prompt for VS 2019):
+With everything in the path, open MSVC2022 prompt (x64 Native Tools Command Prompt for VS 2022):
 $mkdir C:\qt5
 $cd C:\qt5
 $mkdir qt6-build
@@ -31,4 +31,4 @@ $cmake --build . --parallel
 If you wish to install:
 $cmake --install .
 
-And now you'll have Qt6 static for MSVC2019!
+And now you'll have Qt6 static for MSVC2022!
