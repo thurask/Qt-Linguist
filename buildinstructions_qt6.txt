@@ -6,7 +6,7 @@ REQUIRED:
 -Git (latest)
 -MSVC2022
 -Windows 10/11 SDK (latest)
--CMake (choco install cmake)
+-CMake (winget install Kitware.CMake)
 -Ninja (choco install ninja)
 
 With everything in the path, open MSVC2022 prompt (x64 Native Tools Command Prompt for VS 2022):
