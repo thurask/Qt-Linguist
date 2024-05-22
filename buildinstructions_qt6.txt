@@ -1,13 +1,13 @@
 https://wiki.qt.io/Building_Qt_6_from_Git
 
 REQUIRED:
--Python (latest)
--Perl (latest)
--Git (latest)
+-Python (latest; winget install Python.Python.3.xx)
+-Perl for Windows (latest; winget install StrawberryPerl.StrawberryPerl)
+-Git for Windows (latest; winget install Git.Git)
 -MSVC2022
 -Windows 10/11 SDK (latest)
 -CMake (winget install Kitware.CMake)
--Ninja (choco install ninja)
+-Ninja (winget install Ninja-build.Ninja)
 -jom (Qt5 only)
 
 With everything in the path, open MSVC2022 prompt (x64 Native Tools Command Prompt for VS 2022):
