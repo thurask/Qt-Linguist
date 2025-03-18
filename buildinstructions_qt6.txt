@@ -17,7 +17,7 @@ REQUIRED:
 With everything in the path, open MSVC2022 prompt (x64 Native Tools for a 64-bit build; x64_x86 Cross Tools for a 32-bit build):
 $mkdir C:\qt5
 $cd C:\qt5
-$mkdir qt6-build
+$mkdir qt6-build (or qt5-build)
 $git clone https://code.qt.io/qt/qt5.git
 $cd qt5
 
@@ -38,7 +38,9 @@ For Qt6:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -nomake manual-tests -nomake minimal-static-tests -nomake benchmarks -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -qt-openxr -opengl dynamic -prefix C:\qt6-static\
 $cmake --build . --parallel
 
-If you wish to install:
+When done, Linguist binaries will be in qt6-build\qtbase\bin.
+
+If you wish to install everything instead (to the prefix you selected earlier):
 $cmake --install .
 
 And now you'll have Qt6 static for MSVC2022!
@@ -47,7 +49,9 @@ For Qt5:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -opengl dynamic -prefix C:\qt5-static\
 $jom
 
-If you wish to install:
+When done, Linguist binaries will be in qt5-build\qttools\bin.
+
+If you wish to install everything instead (to the prefix you selected earlier):
 $jom install
 
 And now you'll have Qt5 static for MSVC2022!
