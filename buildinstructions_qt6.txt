@@ -1,4 +1,8 @@
 https://wiki.qt.io/Building_Qt_6_from_Git
+https://doc.qt.io/qt-6/windows-building.html
+https://doc.qt.io/qt-6/configure-options.html
+https://doc.qt.io/qt-5/windows-building.html
+https://doc.qt.io/qt-5/configure-options.html
 
 REQUIRED:
 -Python (latest; winget install Python.Python.3.xx)
@@ -10,30 +14,28 @@ REQUIRED:
 -Ninja (winget install Ninja-build.Ninja)
 -jom (Qt5 only)
 
-With everything in the path, open MSVC2022 prompt (x64 Native Tools Command Prompt for VS 2022):
+With everything in the path, open MSVC2022 prompt (x64 Native Tools for a 64-bit build; x64_x86 Cross Tools for a 32-bit build):
 $mkdir C:\qt5
 $cd C:\qt5
 $mkdir qt6-build
 $git clone https://code.qt.io/qt/qt5.git
 $cd qt5
 
-For Qt6:
-$git checkout <branch> (ex. 6.2.0, whatever)
+Check out the desired version:
+$git switch <branch> (ex. 6.8.2)
+or
+$git checkout <tag> (ex. v5.15.16-lts-lgpl)
 
-For Qt5:
-$git checkout <tag> (ex. v5.15.11-lts-lgpl)
-
-If you want to build all of Qt:
+Grab all the submodules:
+$init-repository
+or
 $perl init-repository
 
-And if you want just tools (i.e. Linguist), init only tools and dependencies (for Qt6):
-$perl init-repository --module-subset=qtbase,qttools,qtdeclarative,qtactiveqt,qtimageformats,qtshadertools,qtsvg
-
-In any case, build it:
+Move to build dir:
 $cd ..\qt6-build
 
 For Qt6:
-$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -nomake manual-tests -nomake minimal-static-tests -nomake benchmarks -prefix C:\qt6-static\
+$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -nomake manual-tests -nomake minimal-static-tests -nomake benchmarks -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -qt-openxr -opengl dynamic -prefix C:\qt6-static\
 $cmake --build . --parallel
 
 If you wish to install:
@@ -42,7 +44,7 @@ $cmake --install .
 And now you'll have Qt6 static for MSVC2022!
 
 For Qt5:
-$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -prefix C:\qt5-static\
+$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -qt-openxr -opengl dynamic -prefix C:\qt5-static\
 $jom
 
 If you wish to install:
