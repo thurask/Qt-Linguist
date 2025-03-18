@@ -44,7 +44,7 @@ $cmake --install .
 And now you'll have Qt6 static for MSVC2022!
 
 For Qt5:
-$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -qt-openxr -opengl dynamic -prefix C:\qt5-static\
+$..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -opengl dynamic -prefix C:\qt5-static\
 $jom
 
 If you wish to install:
