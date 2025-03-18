@@ -38,7 +38,7 @@ For Qt6:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -nomake manual-tests -nomake minimal-static-tests -nomake benchmarks -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -qt-openxr -opengl dynamic -prefix C:\qt6-static\
 $cmake --build . --parallel
 
-When done, Linguist binaries will be in qt6-build\qtbase\bin.
+When done, Linguist binaries will be in qt6-build\qtbase\bin. Translation files for Linguist will be in qt6-build\qtbase\translations.
 
 If you wish to install everything instead (to the prefix you selected earlier):
 $cmake --install .
@@ -49,7 +49,7 @@ For Qt5:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -opengl dynamic -prefix C:\qt5-static\
 $jom
 
-When done, Linguist binaries will be in qt5-build\qttools\bin.
+When done, Linguist binaries will be in qt5-build\qttools\bin. Translation files for Linguist will be in qt5-build\qttranslations\translations.
 
 If you wish to install everything instead (to the prefix you selected earlier):
 $jom install
