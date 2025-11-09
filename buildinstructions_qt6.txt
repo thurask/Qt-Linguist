@@ -18,13 +18,9 @@ With everything in the path, open MSVC2022 prompt (x64 Native Tools for a 64-bit
 $mkdir C:\qt5
 $cd C:\qt5
 $mkdir qt6-build (or qt5-build)
-$git clone https://code.qt.io/qt/qt5.git
+$git clone git://code.qt.io/qt/qt5.git --branch [branch] --depth 1
+Where [branch] is a branch like 6.10.0 or a tag like v5.18.18-lts-lgpl
 $cd qt5
-
-Check out the desired version:
-$git switch <branch> (ex. 6.8.2)
-or
-$git checkout <tag> (ex. v5.15.16-lts-lgpl)
 
 Grab all the submodules:
 $init-repository
@@ -33,6 +29,8 @@ $perl init-repository
 
 Move to build dir:
 $cd ..\qt6-build
+or
+$cd ..\qt5-build
 
 For Qt6:
 $..\qt5\configure.bat -release -opensource -platform win32-msvc -static -static-runtime -nomake examples -nomake tests -nomake manual-tests -nomake minimal-static-tests -nomake benchmarks -qt-doubleconversion -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -qt-sqlite -qt-tiff -qt-webp -qt-openxr -opengl dynamic -prefix C:\qt6-static\
