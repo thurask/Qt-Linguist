@@ -1,15 +1,13 @@
 Qt-Linguist
 ===========
 
-**Qt Linguist** is a string editing tool for Qt app translations that edits .ts files. This is a small tool included in the Qt development environment. But the full Qt is a installer of gigabytes. Since Qt is open source, so Qt Linguist standalone can be released.
-
-Because tracking this sucker down is too hard, and so is building all of Qt.
+**Qt Linguist** is a string editing tool for Qt app translations that edits .ts files. This is a small tool included in the Qt development environment, but the full Qt is a installer of gigabytes. Since Qt is open source, Qt Linguist standalone can be released.
 
 ### Windows
 
 Current version = 6.11.0/5.15.18
 
-* [Windows releases only](https://github.com/thurask/Qt-Linguist/releases) in this repository. Zip files contain ```linguist.exe```, ```lconvert.exe```, ```lrelease.exe```, ```lrelease-pro.exe```, ```lprodump.exe``` (up to 6.10), ```ltext2id.exe``` (6.11 and onward), ```lupdate.exe```, and ```lupdate-pro.exe```. Executables are static, 64-bit/32-bit (Qt6/Qt5, respectively), and built with MSVC 2022. The “```translations```” folder is also generated, but there is no known way to display. See [issue #1](https://github.com/thurask/Qt-Linguist/issues/1).
+* [Windows releases only](https://github.com/thurask/Qt-Linguist/releases) in this repository. Zip files contain ```linguist.exe```, ```lconvert.exe```, ```lrelease.exe```, ```lrelease-pro.exe```, ```lprodump.exe``` (up to 6.10), ```ltext2id.exe``` (6.11 and onward), ```lcheck.exe``` (6.12 and onward), ```lupdate.exe```, and ```lupdate-pro.exe```. Executables are static, 64-bit/32-bit (Qt6/Qt5, respectively), and built with MSVC 2022. The “```translations```” folder is also generated,, see ```qt.conf``` in the releases.
 * [rddim/QtLinguistPortable](https://github.com/rddim/QtLinguistPortable) (GitHub) Please replace with the latest with the contents of the above Zip.
 
 * [Official Releases](https://download.qt.io/linguist_releases/) (Qt) Release in 2019.

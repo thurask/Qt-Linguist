@@ -1,0 +1,198 @@
+name: Build and release
+
+# Checks daily for new Qt 6 and Qt 5.15 LGPL release tags. If either is newer than what the
+# latest GitHub release ships, it builds the new one(s) and publishes a release in the same
+# shape as the manual ones: tag YYYYMMDD, title "<qt6>/<qt5>", linguist_<version>.zip assets.
+# The unchanged zip is carried over from the previous release instead of being rebuilt.
+
+on:
+  schedule:
+    - cron: '17 9 * * *' # 09:17 UTC daily
+  workflow_dispatch:
+    inputs:
+      qt6:
+        description: Qt 6 version (blank = latest tag)
+        required: false
+        default: ''
+      qt5:
+        description: Qt 5.15 version (blank = latest -lts-lgpl tag)
+        required: false
+        default: ''
+      force:
+        description: Rebuild and release even if both versions are already released
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      qt6: ${{ steps.v.outputs.qt6 }}
+      qt5: ${{ steps.v.outputs.qt5 }}
+      build: ${{ steps.v.outputs.build }}
+      publish: ${{ steps.v.outputs.publish }}
+      prev_tag: ${{ steps.v.outputs.prev_tag }}
+    steps:
+      - name: Resolve versions
+        id: v
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IN_QT6: ${{ inputs.qt6 }}
+          IN_QT5: ${{ inputs.qt5 }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          set -euo pipefail
+
+          # Release tags on the qt5 super-repo. Pre-releases (-beta, -rc) are excluded by the regex.
+          tags=$(git ls-remote --tags --refs https://github.com/qt/qt5.git | sed 's#.*refs/tags/##')
+          latest6=$(grep -E '^v6\.[0-9]+\.[0-9]+$' <<<"$tags" | sed 's/^v//' | sort -V | tail -n1)
+          latest5=$(grep -E '^v5\.15\.[0-9]+-lts-lgpl$' <<<"$tags" | sed -E 's/^v(.*)-lts-lgpl$/\1/' | sort -V | tail -n1)
+          qt6=${IN_QT6:-$latest6}
+          qt5=${IN_QT5:-$latest5}
+          [[ $qt6 =~ ^6\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Bad Qt 6 version '$qt6'"; exit 1; }
+          [[ $qt5 =~ ^5\.15\.[0-9]+$ ]] || { echo "::error::Bad Qt 5 version '$qt5'"; exit 1; }
+
+          prev_tag=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName 2>/dev/null || true)
+          assets=""
+          if [[ -n $prev_tag ]]; then
+            assets=$(gh release view "$prev_tag" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name')
+          fi
+          released() { grep -qxF "linguist_$1.zip" <<<"$assets"; }
+
+          build=()
+          if [[ $FORCE == true ]] || ! released "$qt6"; then build+=("$qt6"); fi
+          if [[ $FORCE == true ]] || ! released "$qt5"; then build+=("$qt5"); fi
+
+          if (( ${#build[@]} )); then
+            publish=true
+            build_json=$(printf '%s\n' "${build[@]}" | jq -R . | jq -cs .)
+          else
+            publish=false
+            build_json='[]'
+          fi
+
+          {
+            echo "qt6=$qt6"
+            echo "qt5=$qt5"
+            echo "build=$build_json"
+            echo "publish=$publish"
+            echo "prev_tag=$prev_tag"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "| | Version | Action |"
+            echo "|---|---|---|"
+            echo "| Qt 6 | $qt6 | $(released "$qt6" && [[ $FORCE != true ]] && echo 'already released' || echo build) |"
+            echo "| Qt 5 | $qt5 | $(released "$qt5" && [[ $FORCE != true ]] && echo 'already released' || echo build) |"
+            echo
+            echo "Latest release: ${prev_tag:-none}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    needs: check
+    if: needs.check.outputs.publish == 'true'
+    # Pinned: windows-latest moved to Visual Studio 2026 in June 2026. The releases say MSVC 2022.
+    runs-on: windows-2022
+    timeout-minutes: 350
+    strategy:
+      fail-fast: true
+      matrix:
+        version: ${{ fromJSON(needs.check.outputs.build) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Ninja
+        run: python -m pip install --disable-pip-version-check ninja
+
+      - name: Build
+        shell: pwsh
+        env:
+          QT_VERSION: ${{ matrix.version }}
+        run: ./scripts/build.ps1 -Version $env:QT_VERSION -WorkDir C:\qtl -OutDir dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linguist_${{ matrix.version }}
+          path: dist/linguist_${{ matrix.version }}.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    needs: [check, build]
+    if: needs.check.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      QT6: ${{ needs.check.outputs.qt6 }}
+      QT5: ${{ needs.check.outputs.qt5 }}
+      PREV_TAG: ${{ needs.check.outputs.prev_tag }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: linguist_*
+          path: dist
+          merge-multiple: true
+
+      - name: Carry over unchanged build
+        run: |
+          set -euo pipefail
+          for v in "$QT6" "$QT5"; do
+            f="linguist_$v.zip"
+            if [[ ! -f dist/$f ]]; then
+              echo "Reusing $f from $PREV_TAG"
+              gh release download "$PREV_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$f" --dir dist
+            fi
+          done
+          ls -l dist
+
+      - name: Create release
+        run: |
+          set -euo pipefail
+          day=$(date -u +%Y%m%d)
+          tag=$day
+          n=1
+          while gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; do
+            n=$((n + 1))
+            tag="$day-$n"
+          done
+
+          tools() { unzip -Z1 "$1" | grep -E '^[^/]+\.exe$' | sort | paste -sd, - | sed 's/,/, /g'; }
+
+          cat > notes.md <<EOF
+          Qt Linguist tools $QT6 for 64-bit Windows, $QT5 for 32-bit Windows.
+
+          - \`linguist_$QT6.zip\`: $(tools "dist/linguist_$QT6.zip")
+          - \`linguist_$QT5.zip\`: $(tools "dist/linguist_$QT5.zip")
+
+          Static builds with MSVC 2022, no runtime DLLs needed. Each zip also has a \`translations\` folder and a \`qt.conf\` that points Linguist at it.
+
+          Built by [workflow run $GITHUB_RUN_ID]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID).
+          EOF
+
+          gh release create "$tag" "dist/linguist_$QT6.zip" "dist/linguist_$QT5.zip" \
+            --repo "$GITHUB_REPOSITORY" --title "$QT6/$QT5" --notes-file notes.md --latest
+          echo "Published [$tag]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$tag)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Update version in README
+        run: |
+          set -euo pipefail
+          sed -i -E "s#^Current version = .*#Current version = $QT6/$QT5#" README.md
+          if git diff --quiet; then
+            echo "README already up to date"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -am "Update current version in README to $QT6/$QT5"
+          git push
