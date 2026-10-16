@@ -102,10 +102,15 @@ function Build-Qt6 {
         '-qt-doubleconversion', '-qt-zlib', '-qt-libjpeg', '-qt-libpng', '-qt-freetype',
         '-qt-pcre', '-qt-harfbuzz', '-qt-sqlite',
         '-opengl', 'dynamic',
+        # Assistant needs the qlitehtml git submodule of qttools, which a plain clone doesn't
+        # fetch, and Linguist doesn't use it.
+        '-no-feature-assistant',
         '-prefix', (Join-Path $WorkDir 'install')
     )
     Push-Location $Bld
     try { Invoke-Exe (Join-Path $Src 'configure.bat') $configure } finally { Pop-Location }
+    # The top-level configure.bat can exit 0 after CMake fails; no build.ninja means it failed.
+    if (-not (Test-Path (Join-Path $Bld 'build.ninja'))) { throw 'configure failed; see the CMake errors above.' }
 
     # Build only what ends up in the zip (and its dependencies), not all five modules.
     $targets = @(foreach ($t in $ToolNames + 'updateqm') {
@@ -144,6 +149,7 @@ function Build-Qt5 {
     Push-Location $Bld
     try {
         Invoke-Exe (Join-Path $Src 'configure.bat') $configure
+        if (-not (Test-Path 'Makefile')) { throw 'configure failed; see the errors above.' }
         Invoke-Exe jom @("-j$Jobs")
     } finally { Pop-Location }
 

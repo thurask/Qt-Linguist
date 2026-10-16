@@ -102,7 +102,8 @@ jobs:
     runs-on: windows-2022
     timeout-minutes: 350
     strategy:
-      fail-fast: true
+      # Let the other version finish; the release job publishes whichever succeeded.
+      fail-fast: false
       matrix:
         version: ${{ fromJSON(needs.check.outputs.build) }}
     steps:
@@ -126,34 +127,59 @@ jobs:
 
   release:
     needs: [check, build]
-    if: needs.check.outputs.publish == 'true'
+    # Runs even if one build failed, so the other one still gets published.
+    if: ${{ !cancelled() && needs.check.outputs.publish == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
       GH_TOKEN: ${{ github.token }}
-      QT6: ${{ needs.check.outputs.qt6 }}
-      QT5: ${{ needs.check.outputs.qt5 }}
       PREV_TAG: ${{ needs.check.outputs.prev_tag }}
     steps:
       - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v8
+        continue-on-error: true # no artifacts at all is handled below
         with:
           pattern: linguist_*
           path: dist
           merge-multiple: true
 
-      - name: Carry over unchanged build
+      - name: Pick zips
+        env:
+          WANT6: ${{ needs.check.outputs.qt6 }}
+          WANT5: ${{ needs.check.outputs.qt5 }}
         run: |
           set -euo pipefail
-          for v in "$QT6" "$QT5"; do
-            f="linguist_$v.zip"
-            if [[ ! -f dist/$f ]]; then
-              echo "Reusing $f from $PREV_TAG"
-              gh release download "$PREV_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$f" --dir dist
+          mkdir -p dist
+          new=0
+          # For each series: use the fresh build if there is one, otherwise the zip from the
+          # previous release (either it was already current, or this build failed and it'll be
+          # retried on the next run).
+          pick() {
+            local want=$1 major=$2 var=$3 f
+            if [[ -f dist/linguist_$want.zip ]]; then
+              new=$((new + 1))
+              echo "$var=$want" >> "$GITHUB_ENV"
+              return
             fi
-          done
+            [[ -n $PREV_TAG ]] || { echo "::error::No build of $want and no previous release to fall back on"; exit 1; }
+            f=$(gh release view "$PREV_TAG" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' \
+                | grep -E "^linguist_$major\.[0-9]+\.[0-9]+\.zip$" | sort -V | tail -n1)
+            [[ -n $f ]] || { echo "::error::No build of $want and no Qt $major zip in $PREV_TAG"; exit 1; }
+            gh release download "$PREV_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$f" --dir dist
+            local have=${f#linguist_}; have=${have%.zip}
+            if [[ $have != "$want" ]]; then
+              echo "::warning::Qt $want build missing; reusing $have from $PREV_TAG"
+            fi
+            echo "$var=$have" >> "$GITHUB_ENV"
+          }
+          pick "$WANT6" 6 QT6
+          pick "$WANT5" 5 QT5
+          if (( new == 0 )); then
+            echo "::error::No build succeeded, nothing new to release"
+            exit 1
+          fi
           ls -l dist
 
       - name: Create release
