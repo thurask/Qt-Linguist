@@ -5,7 +5,7 @@ Qt-Linguist
 
 ### Windows
 
-Current version = 6.11.0/5.15.18
+Current version = 6.12.0/5.15.19
 
 * [Windows releases only](https://github.com/thurask/Qt-Linguist/releases) in this repository. Zip files contain ```linguist.exe```, ```lconvert.exe```, ```lrelease.exe```, ```lrelease-pro.exe```, ```lprodump.exe``` (up to 6.10), ```ltext2id.exe``` (6.11 and onward), ```lcheck.exe``` (6.12 and onward), ```lupdate.exe```, and ```lupdate-pro.exe```. Executables are static, 64-bit/32-bit (Qt6/Qt5, respectively), and built with MSVC 2022. The “```translations```” folder is also generated,, see ```qt.conf``` in the releases.
 * [rddim/QtLinguistPortable](https://github.com/rddim/QtLinguistPortable) (GitHub) Please replace with the latest with the contents of the above Zip.
